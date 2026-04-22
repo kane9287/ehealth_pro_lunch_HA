@@ -7,7 +7,7 @@ Works for **any school district** using Health-e Pro's public menu system — ju
 ## Installation via HACS
 
 1. In HACS → Integrations → ⋮ (top right) → **Custom repositories**
-2. Add: `https://github.com/kanecb89/healthepro-menu-ha` — Category: **Integration**
+2. Add: `https://github.com/kane9287/healthepro-menu-ha` — Category: **Integration**
 3. Install **Health-e Pro Menu**
 4. Restart Home Assistant
 
@@ -19,9 +19,9 @@ Copy `custom_components/healthepro_menu/` into your HA `config/custom_components
 
 Settings → Integrations → Add Integration → **Health-e Pro Menu**
 
-Paste your school's public menu URL:
+Paste your school's public menu URL, find it here:
 ```
-https://menus.healthepro.com/organizations/2169/sites/13982/menus/92206
+https://menus.healthepro.com/
 ```
 
 The integration auto-discovers the school name, site, and menu details.
@@ -62,7 +62,7 @@ After setup, click **Configure** on the integration:
 
 | Option | Default | Description |
 | --- | --- | --- |
-| Refresh interval | 6 hours | How often to poll Health-e Pro |
+| Refresh interval | 24 hours | How often to poll Health-e Pro |
 | Prefetch next month | On | Load next month in advance |
 | Include recipe details | Off | Fetch allergens & nutrition (extra API calls) |
 | Include prices | Off | Fetch meal pricing |

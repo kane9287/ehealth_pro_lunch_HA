@@ -1,0 +1,11 @@
+{
+  "domain": "healthepro_menu",
+  "name": "Health-e Pro Menu",
+  "version": "0.1.0",
+  "codeowners": ["@kanecb89"],
+  "config_flow": true,
+  "documentation": "https://github.com/kanecb89/healthepro-menu-ha",
+  "issue_tracker": "https://github.com/kanecb89/healthepro-menu-ha/issues",
+  "iot_class": "cloud_polling",
+  "requirements": []
+}

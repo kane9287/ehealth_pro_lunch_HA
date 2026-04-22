@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:menus.healthepro.com)",
+      "WebFetch(domain:hacs.xyz)",
+      "WebFetch(domain:github.com)",
+      "Bash(python3 *)"
+    ]
+  }
+}

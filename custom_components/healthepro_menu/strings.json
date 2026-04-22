@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Health-e Pro Menu",
+        "description": "Paste the public Health-e Pro menu URL from your school's lunch page.\n\nExample: {example_url}",
+        "data": {
+          "source_url": "Menu URL",
+          "custom_name": "Display name (optional)"
+        },
+        "data_description": {
+          "custom_name": "Override the auto-detected school/menu name shown in Home Assistant. Leave blank to use the name from Health-e Pro."
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "That doesn't look like a Health-e Pro menu URL. Make sure the URL contains /organizations/…/sites/…/menus/…",
+      "invalid_host": "URL must be from menus.healthepro.com",
+      "cannot_connect": "Could not connect to Health-e Pro. Check your internet connection and try again.",
+      "not_found": "The menu, site, or organization was not found. Double-check the URL.",
+      "no_published_months": "No published months found for this menu. The menu may not be active yet.",
+      "already_configured": "This menu is already configured."
+    },
+    "abort": {
+      "already_configured": "This menu is already set up."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Health-e Pro Menu Options",
+        "data": {
+          "refresh_hours": "Refresh interval (hours)",
+          "prefetch_next_month": "Prefetch next month's menu",
+          "include_recipe_details": "Include recipe details (allergens, nutrition)",
+          "include_prices": "Include meal prices",
+          "include_sidebars": "Include sidebar announcements"
+        }
+      }
+    }
+  }
+}

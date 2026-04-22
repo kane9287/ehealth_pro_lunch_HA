@@ -57,7 +57,7 @@ def _day_state(day: MenuDay | None) -> str:
         return "No school"
     if not day.entrees:
         return "Menu available"
-    return ", ".join(day.entrees)
+    return "* " + "  \n* ".join(day.entrees)
 
 
 def _day_attrs(day: MenuDay | None, data: SchoolMenuData) -> dict:

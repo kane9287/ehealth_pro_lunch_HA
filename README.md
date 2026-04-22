@@ -1,5 +1,5 @@
 # Health-e Pro Menu — Home Assistant Integration
-
+## **AI DISCLOSURE** This was made by claude.ai
 A Home Assistant custom integration that pulls school lunch and breakfast menus from [Health-e Pro](https://www.healthepro.com) and surfaces them as sensors for your Lovelace dashboard.
 
 Works for **any school district** using Health-e Pro's public menu system — just paste the menu URL.

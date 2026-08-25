@@ -71,6 +71,38 @@ def _month_date_range(year: int, month: int) -> tuple[str, str]:
     return f"{year}-{month:02d}-01", f"{year}-{month:02d}-{last_day:02d}"
 
 
+def _select_target_month(
+    published_months: list[str], now
+) -> tuple[int, int] | None:
+    """Pick which (year, month) to fetch based on what the API has published.
+
+    Prefers the current calendar month if it's published; otherwise the
+    nearest upcoming published month (e.g. school hasn't started yet); and
+    otherwise falls back to the most recent past published month (e.g. menus
+    for next school year aren't published yet).
+    """
+    months: list[tuple[int, int]] = []
+    for raw in published_months:
+        try:
+            parts = raw.split("-")
+            months.append((int(parts[0]), int(parts[1])))
+        except (IndexError, ValueError):
+            continue
+    if not months:
+        return None
+    months.sort()
+
+    current = (now.year, now.month)
+    if current in months:
+        return current
+
+    upcoming = [m for m in months if m >= current]
+    if upcoming:
+        return upcoming[0]
+
+    return months[-1]
+
+
 class HealtheProCoordinator(DataUpdateCoordinator[SchoolMenuData]):
     def __init__(self, hass: HomeAssistant, entry) -> None:
         self.entry = entry
@@ -97,9 +129,6 @@ class HealtheProCoordinator(DataUpdateCoordinator[SchoolMenuData]):
         include_recipes = opts.get(CONF_INCLUDE_RECIPE_DETAILS, DEFAULT_INCLUDE_RECIPE_DETAILS)
 
         now = dt_util.now()
-        cur_year, cur_month = now.year, now.month
-        nxt_year, nxt_month = _shift_month(cur_year, cur_month)
-
         last_error: str | None = None
 
         # Fetch metadata (non-fatal if cached version already exists)
@@ -124,6 +153,12 @@ class HealtheProCoordinator(DataUpdateCoordinator[SchoolMenuData]):
         site_name = site.get("name", str(site_id))
         menu_name = menu_meta.get("name", str(menu_id))
         published_months = menu_meta.get("published_months", [])
+
+        target = _select_target_month(published_months, now)
+        if target is None:
+            raise UpdateFailed("No published months available for this menu")
+        cur_year, cur_month = target
+        nxt_year, nxt_month = _shift_month(cur_year, cur_month)
 
         # Fetch current month (required)
         try:

@@ -2,6 +2,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import date, timedelta
+
+
+PHOTO_DAYS = 7
+
+
+def upcoming_dates(today: date) -> list[date]:
+    """Today and the following days that get recipe photos.
+
+    Seven days always include the next school day, apart from breaks.
+    """
+    return [today + timedelta(days=i) for i in range(PHOTO_DAYS)]
 
 
 @dataclass
@@ -12,6 +24,10 @@ class RecipeDetail:
     attributes: list[str]
     calories: float | None
     category: str | None
+    # Photo URL is signed and expires 24 hours after the API returns it.
+    # Kept out of to_dict(): image entities expose photos, not attributes.
+    image_url: str | None = None
+    updated_at: str | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -34,6 +50,8 @@ class MenuDay:
     recipe_ids: list[int]
     notes: list[str]
     recipes: dict[int, RecipeDetail] = field(default_factory=dict)
+    # Recipe ID -> name exactly as the menu displays it (matches `sections`).
+    recipe_names: dict[int, str] = field(default_factory=dict)
 
     @property
     def allergens(self) -> list[str]:
@@ -98,3 +116,20 @@ class SchoolMenuData:
                 if day:
                     return day
         return None
+
+    def upcoming_photos(self, today: date) -> dict[int, tuple[RecipeDetail, str]]:
+        """Recipes with a photo served from `today` through the next week.
+
+        Maps recipe ID -> (recipe, name as the menu displays it), in the order
+        items first appear. A recipe served on several days appears once.
+        """
+        photos: dict[int, tuple[RecipeDetail, str]] = {}
+        for d in upcoming_dates(today):
+            day = self.get_day(d.isoformat())
+            if day is None or day.off_day:
+                continue
+            for rid in day.recipe_ids:
+                recipe = day.recipes.get(rid)
+                if rid not in photos and recipe and recipe.image_url:
+                    photos[rid] = (recipe, day.recipe_names.get(rid, recipe.name))
+        return photos
